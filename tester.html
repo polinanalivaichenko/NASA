@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UFT-8">
+  <meta http-equiv="X-UA-Compatible" content="IE-edge">
+  <meta name="wieport" content="width=device-with, inital-scale=1.0">
+  <title>Mars Rover Photos</title>
+
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="header">
+    <h1>Mars Rover Photos</h1>
+    <form class="header-form">
+      <label for="rover">Select Rover:</label>
+      <select id="rover">
+        <option value="curiosity">Curiosity</option>
+        <option value="opportunity">Opportunity</option>
+        <option value="spirit">Spirit</option>
+      </select>
+      <label for="date">Select Date:</label>
+      <input type="date" id="date">
+      <button type="button" onclick="getPhotos()">Get Photos</button>
+    </form>
+  </header>
+
+  <div class="container">  
+    <div id="photos"></div>
+  </div>
+
+  
+  <script>
+    function getPhotos() {
+      let rover = document.getElementById("rover").value;
+      let date = document.getElementById("date").value;
+
+      let apiUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?earth_date=${date}&api_key=aWpLg3kwL5OkaZNfDuIhIgxiQ0hdyNdgricPu1Xd`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          let photos = data.photos.slice(0, 25); // Ограничиваем до 25 фотографий
+          let photoContainer = document.getElementById("photos");
+          photoContainer.innerHTML = ""; // Очищаем предыдущие фотографии
+
+          photos.forEach(photo => {
+            let img = document.createElement("img");
+            img.src = photo.img_src;
+            img.alt = "Mars Rover Photo";
+            photoContainer.appendChild(img);
+          });
+        })
+        .catch(error => {
+          console.log(error);
+          alert("An error occurred while fetching photos.");
+        });
+    }
+  </script>
+</body>
+
+</html>
